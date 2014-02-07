@@ -2,6 +2,8 @@
 var socket = undefined;
 var token =  undefined;
 
+importScripts('//proxy.infostander.leela/socket.io/socket.io.js');
+
 /**
  * Connect to the web-socket and setup events.
  */
@@ -28,3 +30,8 @@ function connect() {
     alert('Pong received from: ' + socket.socket.options.host);
   });
 }
+
+self.addEventListener('message', function(e) {
+  token = e.data.token;
+  connect();
+});
