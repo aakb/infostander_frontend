@@ -45,9 +45,11 @@ var INFOS = (function() {
     var cookie = new Cookie('infostander_token');
     var token = cookie.get('token');
     if (token === undefined) {
-      // If no token: display actiavte page.
+      // Token not found, so display actiavte page.
       var template = Hogan.compile(window.templates['activation']);
       var output = template.render();
+
+      // Insert the render content.
       var el = document.getElementsByClassName('content');
       el[0].innerHTML = output;
     }
