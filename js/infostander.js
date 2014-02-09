@@ -3,9 +3,12 @@
 var INFOS = (function() {
   "use strict"
 
-  // Start web-worker that is used to communicate with the backend.
-  var connection = undefined;
-  var proxy_url = 'https://proxy.infostander.leela';
+  // URL to use to activate screen (fixed CORS issues).
+  var proxy_url = '/proxy';
+
+  // The middelware proxy.
+  var proxy_domain = '//localhost';
+  var proxy_port = '3000';
 
   /**
    * Cookie object.
@@ -14,7 +17,6 @@ var INFOS = (function() {
    */
   var Cookie = (function() {
     var Cookie = function(name) {
-
       var self = this;
       var name = name;
 
@@ -52,6 +54,7 @@ var INFOS = (function() {
     // Check if token exists.
     var cookie = new Cookie('infostander_token');
     var token = cookie.get('token');
+
     if (token === undefined) {
       // Token not found, so display actiavte page.
       var template = Hogan.compile(window.templates['activation']);
@@ -81,12 +84,13 @@ var INFOS = (function() {
           }
           else {
             // We reached our target server, but it returned an error
-
+            alert('Activation could not be performed.');
           }
         }
 
         request.onerror = function(exception) {
           // There was a connection error of some sort
+          alert('Activation request failed.');
           console.log(exception);
         }
 
@@ -99,15 +103,48 @@ var INFOS = (function() {
     }
     else {
       // If token connect to the socket (web-worker).
-            
+      connect(token);
     } 
   }
 
+  /**
+   * Load the socket.io script from the proxy server.
+   */
+  function loadSocket() {
+    var file = document.createElement('script');
+    file.setAttribute('type', 'text/javascript');
+    file.setAttribute('src', '//' + proxy_domain + ':' + proxy_port + '/socket.io/socket.io.js');
+    document.getElementsByTagName("head")[0].appendChild(file);
+  }
+
+  /**
+   * Connect to the web-socket.
+   *
+   * @param string token
+   *   JWT authentication token from the activation request.
+   */
   function connect(token) {
-    connection = new Worker('js/communication.js');
-    connection.postMessage({ token: token });
+    var socket = io.connect('//' + proxy_domain + ':' + proxy_port, { query: 'token=' + token });
+    socket.socket.on('error', function (reason) {
+      alert(reason);
+    });
 
+    socket.on('connect', function () {
+      alert('Connected to the server (' + socket.socket.options.host + ').');
+      socket.emit('ready', { token: token });
+    });
 
+    socket.on('disconnect', function () {
+      alert('Disconnect from the server.');
+    });
+
+    socket.on('reconnecting', function () {
+      alert('Trying to re-connecting to the server.');
+    });
+
+    socket.on('pong', function () {
+      alert('Pong received from: ' + socket.socket.options.host);
+    });
   }
 
   /***************************
@@ -115,6 +152,9 @@ var INFOS = (function() {
    *****************/
 
   function start() {
+    // Load socket.io Javascript.
+    loadSocket();
+
     // Activate the screen.
     activation();
   }
