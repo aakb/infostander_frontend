@@ -6,6 +6,12 @@ var INFOS = (function() {
   // Get the load configuration object.
   var config = window.config;
 
+  // Communication with web-socket.
+  var socket = undefined;
+
+  // Global variable with token cookie.
+  var token_cookie = undefined;
+
   /**
    * Cookie object.
    *
@@ -48,8 +54,8 @@ var INFOS = (function() {
    */
   function activation() {
     // Check if token exists.
-    var cookie = new Cookie('infostander_token');
-    var token = cookie.get('token');
+    token_cookie = new Cookie('infostander_token');
+    var token = token_cookie.get('token');
 
     if (token === undefined) {
       // Token not found, so display actiavte page.
@@ -98,7 +104,7 @@ var INFOS = (function() {
       });
     }
     else {
-      // If token connect to the socket (web-worker).
+      // If token exists, connect to the socket.
       connect(token);
     } 
   }
@@ -120,27 +126,43 @@ var INFOS = (function() {
    *   JWT authentication token from the activation request.
    */
   function connect(token) {
-    var socket = io.connect('//' + config.proxy_domain + ':' + config.proxy_port, { query: 'token=' + token });
+    // Get connected to the server.
+    socket = io.connect('//' + config.proxy_domain + ':' + config.proxy_port, { query: 'token=' + token });
+
+    // Handle error events.
     socket.socket.on('error', function (reason) {
       alert(reason);
     });
 
+    // Handle connected event.
     socket.on('connect', function () {
+      // Connection accepted, so lets store the token.
+      token_cookie.set(token);
+
       alert('Connected to the server (' + socket.socket.options.host + ').');
       socket.emit('ready', { token: token });
     });
 
+    // Handle disconnect event (fires when disconnected or connection fails).
     socket.on('disconnect', function () {
       alert('Disconnect from the server.');
     });
 
-    socket.on('reconnecting', function () {
-      alert('Trying to re-connecting to the server.');
+    // Ready event - if the server accepted the ready command.
+    socket.on('ready', function (data) {
+      if (data.statusCode === 200) {
+        alert('Server accepted ready command');
+      }
     });
 
-    socket.on('pong', function () {
-      alert('Pong received from: ' + socket.socket.options.host);
+    // Pause event - if the server accepted the pause command.
+    socket.on('pause', function (data) {
+      if (data.statusCode === 200) {
+        alert('Server accepted pause command');
+      }
     });
+
+
   }
 
   /***************************
@@ -159,7 +181,7 @@ var INFOS = (function() {
    * This should mainly be used to bebugging.
    */
   function stop() {
-
+    socket.emit('pause', {});
   }
 
   return {
