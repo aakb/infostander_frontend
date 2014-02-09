@@ -3,12 +3,8 @@
 var INFOS = (function() {
   "use strict"
 
-  // URL to use to activate screen (fixed CORS issues).
-  var proxy_url = '/proxy';
-
-  // The middelware proxy.
-  var proxy_domain = '//localhost';
-  var proxy_port = '3000';
+  // Get the load configuration object.
+  var config = window.config;
 
   /**
    * Cookie object.
@@ -71,7 +67,7 @@ var INFOS = (function() {
 
         // Build ajax post request.
         var request = new XMLHttpRequest();
-        request.open('POST', proxy_url + '/activate', true);
+        request.open('POST', config.proxy_url + '/activate', true);
         request.setRequestHeader('Content-Type', 'application/json');
 
         request.onload = function(resp) {
@@ -113,7 +109,7 @@ var INFOS = (function() {
   function loadSocket() {
     var file = document.createElement('script');
     file.setAttribute('type', 'text/javascript');
-    file.setAttribute('src', '//' + proxy_domain + ':' + proxy_port + '/socket.io/socket.io.js');
+    file.setAttribute('src', '//' + config.proxy_domain + ':' + config.proxy_port + '/socket.io/socket.io.js');
     document.getElementsByTagName("head")[0].appendChild(file);
   }
 
@@ -124,7 +120,7 @@ var INFOS = (function() {
    *   JWT authentication token from the activation request.
    */
   function connect(token) {
-    var socket = io.connect('//' + proxy_domain + ':' + proxy_port, { query: 'token=' + token });
+    var socket = io.connect('//' + config.proxy_domain + ':' + config.proxy_port, { query: 'token=' + token });
     socket.socket.on('error', function (reason) {
       alert(reason);
     });
