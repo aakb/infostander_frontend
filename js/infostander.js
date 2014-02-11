@@ -117,7 +117,7 @@ var INFOS = (function() {
   function loadSocket() {
     var file = document.createElement('script');
     file.setAttribute('type', 'text/javascript');
-    file.setAttribute('src', config.resource.server +  config.resource.uri + '/socket.io/socket.io.js');
+    file.setAttribute('src', config.resource.server +  config.resource.uri + 'socket.io/socket.io.js');
     document.getElementsByTagName("head")[0].appendChild(file);
   }
 
