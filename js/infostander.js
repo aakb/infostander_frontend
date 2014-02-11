@@ -22,12 +22,14 @@ var INFOS = (function() {
       var self = this;
       var name = name;
 
+      // Get token.
       self.get = function get() {
         var regexp = new RegExp("(?:^" + name + "|;\s*"+ name + ")=(.*?)(?:;|$)", "g");
         var result = regexp.exec(document.cookie);
         return (result === null) ? undefined : result[1];
       }
 
+      // Set token
       this.set = function set(value) {
         var cookie = name + "=" + escape(value) + ";";
  
@@ -73,7 +75,7 @@ var INFOS = (function() {
 
         // Build ajax post request.
         var request = new XMLHttpRequest();
-        request.open('POST', config.proxy_url + '/activate', true);
+        request.open('POST', config.resource.server + config.resource.uri + '/activate', true);
         request.setRequestHeader('Content-Type', 'application/json');
 
         request.onload = function(resp) {
@@ -115,7 +117,7 @@ var INFOS = (function() {
   function loadSocket() {
     var file = document.createElement('script');
     file.setAttribute('type', 'text/javascript');
-    file.setAttribute('src', config.proxy_domain + ':' + config.proxy_port + '/socket.io/socket.io.js');
+    file.setAttribute('src', config.resource.server +  config.resource.uri + '/socket.io/socket.io.js');
     document.getElementsByTagName("head")[0].appendChild(file);
   }
 
@@ -127,7 +129,7 @@ var INFOS = (function() {
    */
   function connect(token) {
     // Get connected to the server.
-    socket = io.connect(config.proxy_domain + ':' + config.proxy_port, { query: 'token=' + token });
+    socket = io.connect(config.ws.server + config.ws.uri, { query: 'token=' + token });
 
     // Handle error events.
     socket.socket.on('error', function (reason) {
