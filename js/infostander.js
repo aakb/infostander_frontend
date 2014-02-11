@@ -129,7 +129,7 @@ var INFOS = (function() {
    */
   function connect(token) {
     // Get connected to the server.
-    socket = io.connect(config.ws.server + config.ws.uri, { query: 'token=' + token });
+    socket = io.connect(config.ws.server, { query: 'token=' + token });
 
     // Handle error events.
     socket.socket.on('error', function (reason) {
