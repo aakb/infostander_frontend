@@ -114,10 +114,13 @@ var INFOS = (function() {
   /**
    * Load the socket.io script from the proxy server.
    */
-  function loadSocket() {
+  function loadSocket(callback) {
     var file = document.createElement('script');
     file.setAttribute('type', 'text/javascript');
     file.setAttribute('src', config.resource.server +  config.resource.uri + '/socket.io/socket.io.js');
+
+    file.onload = callback;
+
     document.getElementsByTagName("head")[0].appendChild(file);
   }
 
@@ -173,10 +176,10 @@ var INFOS = (function() {
 
   function start() {
     // Load socket.io Javascript.
-    loadSocket();
-
-    // Activate the screen.
-    activation();
+    loadSocket(function () {
+      // Activate the screen.
+      activation();
+    });
   }
 
   /**
