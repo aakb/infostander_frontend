@@ -4,25 +4,20 @@ It's using:
  * Socket.io
  * hogan.js
 
+# Production
 
-# Apache proxy
-<pre>
- ProxyRequests off
- SSLProxyEngine on
+## Nginx proxy
 
- <Proxy *>
-   Order deny,allow
-   Allow from all
- </Proxy>
+## Configuration
 
- ProxyPass /proxy https://localhost:3000
- ProxyPassReverse /proxy https://localhost:3000
+* config.js
 
- # SSL Engine
- SSLEngine on
-</pre>
 
-# Pre-compile templates
+# Development
+
+## Apache proxy
+
+## Pre-compile templates
 
 * https://github.com/kupriyanenko/jsttojs
 
