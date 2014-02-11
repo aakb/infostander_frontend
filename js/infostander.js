@@ -75,7 +75,7 @@ var INFOS = (function() {
 
         // Build ajax post request.
         var request = new XMLHttpRequest();
-        request.open('POST', config.resource.server + config.resource.uri + '/activate', true);
+        request.open('POST', config.resource.server + config.resource.uri + 'activate', true);
         request.setRequestHeader('Content-Type', 'application/json');
 
         request.onload = function(resp) {
