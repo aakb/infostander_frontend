@@ -8,8 +8,7 @@ window.config = {
 
   // Used by web-socket.
   ws: {
-    server: '//localhost:3000/',
-    uri: 'ws'
+    server: '//localhost:3000/'
   }
 
 }

@@ -6,6 +6,7 @@ It's using:
 
 # Production
 
+
 ## Nginx proxy
 
 <pre>
@@ -79,6 +80,19 @@ server {
 # Development
 
 ## Apache proxy
+
+<pre>
+ProxyRequests off
+SSLProxyEngine on
+
+<Proxy *>
+  Order deny,allow
+  Allow from all
+</Proxy>
+
+ProxyPass /proxy https://localhost:3000
+ProxyPassReverse /proxy https://localhost:3000
+</pre>
 
 ## Pre-compile templates
 

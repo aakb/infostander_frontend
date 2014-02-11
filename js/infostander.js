@@ -144,7 +144,7 @@ var INFOS = (function() {
       // Connection accepted, so lets store the token.
       token_cookie.set(token);
 
-      alert('Connected to the server (' + socket.socket.options.host + ').');
+      // Set ready state at the server.
       socket.emit('ready', { token: token });
     });
 
@@ -155,19 +155,38 @@ var INFOS = (function() {
 
     // Ready event - if the server accepted the ready command.
     socket.on('ready', function (data) {
-      if (data.statusCode === 200) {
-        alert('Server accepted ready command');
+      if (data.statusCode != 200) {
+        // @todo: error on ready command.
       }
     });
 
     // Pause event - if the server accepted the pause command.
     socket.on('pause', function (data) {
-      if (data.statusCode === 200) {
-        alert('Server accepted pause command');
+      if (data.statusCode != 200) {
+        // @todo: error on pause command. 
       }
     });
 
+    // Reload - if the server accepted the pause command.
+    socket.on('reload', function (data) {
+      // Reload browser windows (by-pass-cache).
+      location.reload(true);
+    });
 
+    // Request status.
+    socket.on('status', function (data) {
+      alert('Status requested');
+    });
+
+    // Channel pushed content.
+    socket.on('channelPush', function (data) {
+      alert('Content pushed');
+    });
+
+    // Emergency content pushed.
+    socket.on('emergencyPush', function (data) {
+      alert('Emergency content pushed');
+    });
   }
 
   /***************************
