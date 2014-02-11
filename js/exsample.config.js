@@ -4,6 +4,6 @@ window.config = {
   proxy_url: '/proxy',
 
   // The middelware proxy.
-  proxy_domain: 'localhost',
+  proxy_domain: 'https://localhost',
   proxy_port: '3000'
 }
