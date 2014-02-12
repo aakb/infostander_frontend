@@ -32,7 +32,7 @@ var INFOS = (function() {
       // Set token
       this.set = function set(value) {
         var cookie = name + "=" + escape(value) + ";";
- 
+
         cookie += "path=/;";
         cookie += "domain=" + document.domain + ";";
         cookie += " secure";
@@ -82,7 +82,7 @@ var INFOS = (function() {
           if (request.readyState == 4 && request.status == 200) {
             // Success.
             resp = JSON.parse(request.responseText);
-            
+
             // Try to get connection to the proxy.
             connect(resp.token);
           }
@@ -95,7 +95,6 @@ var INFOS = (function() {
         request.onerror = function(exception) {
           // There was a connection error of some sort
           alert('Activation request failed.');
-          console.log(exception);
         }
 
         // Send the request.
@@ -108,7 +107,7 @@ var INFOS = (function() {
     else {
       // If token exists, connect to the socket.
       connect(token);
-    } 
+    }
   }
 
   /**
@@ -150,7 +149,7 @@ var INFOS = (function() {
 
     // Handle disconnect event (fires when disconnected or connection fails).
     socket.on('disconnect', function () {
-      alert('Disconnect from the server.');
+      //alert('Disconnect from the server.');
     });
 
     // Ready event - if the server accepted the ready command.
@@ -163,7 +162,7 @@ var INFOS = (function() {
     // Pause event - if the server accepted the pause command.
     socket.on('pause', function (data) {
       if (data.statusCode != 200) {
-        // @todo: error on pause command. 
+        // @todo: error on pause command.
       }
     });
 
