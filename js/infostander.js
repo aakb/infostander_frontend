@@ -175,6 +175,7 @@ var INFOS = (function() {
     socket.on('ready', function (data) {
       if (data.statusCode != 200) {
         // @todo: error on ready command.
+        alert('ready connected');
       }
     });
 
