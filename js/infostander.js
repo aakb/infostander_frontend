@@ -35,7 +35,11 @@ var INFOS = (function() {
 
         cookie += "path=/;";
         cookie += "domain=" + document.domain + ";";
-        cookie += " secure";
+
+        // Check if cookie should be available only over https.
+        if (config.cookie.secure === true) {
+          cookie += " secure";
+        }
 
         document.cookie = cookie;
       }

@@ -105,6 +105,9 @@ window.config = {
   },
   ws: {
     server: '//localhost:3000/',
+  },
+  cookie: {
+    secure: false
   }
 }
 ```
@@ -118,6 +121,9 @@ window.config = {
   },
   ws: {
     server: '//infostander.etek.dk/',
+  },
+  cookie: {
+    secure: true
   }
 }
 ```
