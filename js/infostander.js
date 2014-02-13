@@ -163,7 +163,6 @@ var INFOS = (function() {
     // Handle disconnect event (fires when disconnected or connection fails).
     socket.on('disconnect', function (reason) {
       if (reason == 'booted') {
-        alert('test1 ' + reason);
         // Remove cookie with token.
         token_cookie.remove();
 
