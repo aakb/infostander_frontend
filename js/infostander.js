@@ -163,6 +163,7 @@ var INFOS = (function() {
     // Handle disconnect event (fires when disconnected or connection fails).
     socket.on('disconnect', function (reason) {
       if (reason == 'booted') {
+        alert('test1 ' + reason);
         // Remove cookie with token.
         token_cookie.remove();
 
@@ -174,7 +175,13 @@ var INFOS = (function() {
     // Ready event - if the server accepted the ready command.
     socket.on('ready', function (data) {
       if (data.statusCode != 200) {
-        // @todo: error on ready command.
+        // Screen not found will reload applicaton.
+        if (data.statusCode !== 404) {
+          // @todo: error on ready command.
+          alert('Code: ' + data.statusCode + ' - Connection error');
+        }
+      }
+      else {
         alert('ready connected');
       }
     });
