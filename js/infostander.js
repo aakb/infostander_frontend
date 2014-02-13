@@ -30,18 +30,27 @@ var INFOS = (function() {
       }
 
       // Set token
-      this.set = function set(value) {
-        var cookie = name + "=" + escape(value) + ";";
+      self.set = function set(value, expire) {
+        var cookie = name + '=' + escape(value) + ';';
 
-        cookie += "path=/;";
-        cookie += "domain=" + document.domain + ";";
+        if (expire !== undefined) {
+          cookie += 'expires=' + expire + ';';
+        }
+
+        cookie += 'path=/;';
+        cookie += 'domain=' + document.domain + ';';
 
         // Check if cookie should be available only over https.
         if (config.cookie.secure === true) {
-          cookie += " secure";
+          cookie += ' secure';
         }
 
         document.cookie = cookie;
+      }
+
+      // Remove the cookie by expiring it.
+      self.remove = function remove() {
+        self.set('', 'Thu, 01 Jan 1970 00:00:00 GMT');
       }
     }
 
@@ -152,8 +161,14 @@ var INFOS = (function() {
     });
 
     // Handle disconnect event (fires when disconnected or connection fails).
-    socket.on('disconnect', function () {
-      //alert('Disconnect from the server.');
+    socket.on('disconnect', function (reason) {
+      if (reason == 'booted') {
+        // Remove cookie with token.
+        token_cookie.remove();
+
+        // Reload application.
+        location.reload(true);
+      }
     });
 
     // Ready event - if the server accepted the ready command.
