@@ -1,4 +1,8 @@
-
+/**
+ * @file
+ * This is a frontend to the information publishing system. This frontend is used
+ * by the information pylons.
+ */
 
 var INFOS = (function() {
   "use strict"
@@ -174,14 +178,17 @@ var INFOS = (function() {
     // Ready event - if the server accepted the ready command.
     socket.on('ready', function (data) {
       if (data.statusCode != 200) {
-        // Screen not found will reload applicaton.
+        // Screen not found will reload applicaton on dis-connection event.
         if (data.statusCode !== 404) {
-          // @todo: error on ready command.
+          // @todo: better error message.
           alert('Code: ' + data.statusCode + ' - Connection error');
+          return;
         }
       }
       else {
-        alert('ready connected');
+        // Remove the form.
+        var el = document.getElementsByClassName('content');
+        el[0].innerHTML = '<p>Awaiting content...</p>';
       }
     });
 
