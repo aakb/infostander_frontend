@@ -212,7 +212,12 @@ var INFOS = (function() {
 
     // Channel pushed content.
     socket.on('channelPush', function (data) {
-      alert('Content pushed');
+      var slideTemplate = Hogan.compile(window.templates['slide']);
+      var output = slideTemplate.render(data);
+
+      // Insert the render content.
+      var el = document.getElementsByClassName('content');
+      el[0].innerHTML = output;
     });
 
     // Emergency content pushed.
