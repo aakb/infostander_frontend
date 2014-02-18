@@ -130,16 +130,14 @@ window.config = {
 
 # Pre-compile templates
 
-* https://github.com/kupriyanenko/jsttojs
+* http://handlebarsjs.com/precompilation.html
 
 ## Install
 ```
- ~$ node install -g jsttojs
- ~$ jsttojs views views/templates.js --name templates
+ ~$ npm install handlebars@1.3.0 -g
 ```
 
 ## Compile
-You can also make the pre-compiler watch for file changes. When detected it will automatically compile the files.
 ```
- ~$ jsttojs views views/templates.js --name templates --watch
+ ~$ handlebars views -f views/templates.js
 ```

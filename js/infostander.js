@@ -78,8 +78,8 @@ var INFOS = (function() {
 
     if (token === undefined) {
       // Token not found, so display actiavte page.
-      var template = Hogan.compile(window.templates['activation']);
-      var output = template.render();
+      var template = Handlebars.templates.activation;
+      var output = template({button: 'Activation'});
 
       // Insert the render content.
       var el = document.getElementsByClassName('content');
@@ -212,12 +212,16 @@ var INFOS = (function() {
 
     // Channel pushed content.
     socket.on('channelPush', function (data) {
-      var slideTemplate = Hogan.compile(window.templates['slide']);
-      var output = slideTemplate.render(data);
-
-      // Insert the render content.
       var el = document.getElementsByClassName('content');
-      el[0].innerHTML = output;
+      el[0].innerHTML = '';
+
+      var length = data.slides.length;
+      for (var i = 0; i < length; i++) {
+        var output = Handlebars.templates.slide(data.slides[i]);
+        // Insert the render content.
+        el[0].innerHTML += output;
+      }
+
     });
 
     // Emergency content pushed.
