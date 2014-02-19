@@ -215,6 +215,7 @@ var INFOS = (function() {
       var el = document.getElementsByClassName('content');
       el[0].innerHTML = '';
 
+      // Render images (slides).
       var length = data.slides.length;
       for (var i = 0; i < length; i++) {
         var output = Handlebars.templates.slide(data.slides[i]);
@@ -222,12 +223,40 @@ var INFOS = (function() {
         el[0].innerHTML += output;
       }
 
+      startAnimation();
     });
 
     // Emergency content pushed.
     socket.on('emergencyPush', function (data) {
       alert('Emergency content pushed');
     });
+  }
+
+  /**
+   * Start the slide aninmation (by moving the fade class between images).
+   */
+  function startAnimation () {
+    // Setup the animation.
+    var images = document.getElementsByClassName('image');
+    var count = images.length;
+    var current = 0;
+    var el = document.getElementsByClassName('content');
+    el[0].addEventListener("animationend", function(event) {
+      // Remove class.
+      event.target.className = event.target.className.replace('fade', '');
+
+      // Update counter.
+      current++;
+      if (current === count) {
+        current = 0;
+      }
+
+      // Add class to next image.
+      images[current].className += ' fade';
+    }, false);
+
+    // Start the show.
+    images[current].className += ' fade';
   }
 
   /***************************

@@ -21,16 +21,16 @@ helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
 function program1(depth0,data) {
   
   var buffer = "";
-  buffer += "\n      <li><img src=\""
+  buffer += "\n    <img class=\"image\" src=\""
     + escapeExpression((typeof depth0 === functionType ? depth0.apply(depth0) : depth0))
-    + "\" /></li>\n    ";
+    + "\" />\n  ";
   return buffer;
   }
 
-  buffer += "<div class=\"slide\">\n  <ul>\n    ";
+  buffer += "<div class=\"slide\">\n  ";
   stack1 = helpers.each.call(depth0, ((stack1 = (depth0 && depth0.media)),stack1 == null || stack1 === false ? stack1 : stack1.image), {hash:{},inverse:self.noop,fn:self.program(1, program1, data),data:data});
   if(stack1 || stack1 === 0) { buffer += stack1; }
-  buffer += "\n  </ul>\n</div>";
+  buffer += "\n</div>";
   return buffer;
   });
 })();
