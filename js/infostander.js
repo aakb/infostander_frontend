@@ -16,6 +16,12 @@ var INFOS = (function() {
   // Global variable with token cookie.
   var token_cookie = undefined;
 
+  // Array of cached slides. Used to cache new pushed content
+  // until the system is ready to display it.
+  var cache = [];
+  var content_update = false;
+  var content_init = true;
+
   /**
    * Cookie object.
    *
@@ -212,24 +218,39 @@ var INFOS = (function() {
 
     // Channel pushed content.
     socket.on('channelPush', function (data) {
-      var el = document.getElementsByClassName('content');
-      el[0].innerHTML = '';
+      // Cache data.
+      cache = data;
 
-      // Render images (slides).
-      var length = data.slides.length;
-      for (var i = 0; i < length; i++) {
-        var output = Handlebars.templates.slide(data.slides[i]);
-        // Insert the render content.
-        el[0].innerHTML += output;
+      // Flags that content is available. The slides will be
+      // updated when current slides have been displayed. This
+      // is to prevent "flicker" on the screens.
+      content_update = true;
+
+      // If this is the first time content have been received
+      // start the show.
+      if (content_init) {
+        content_init = false;
+        insertSlides();
+        startAnimation();
       }
-
-      startAnimation();
     });
+  }
 
-    // Emergency content pushed.
-    socket.on('emergencyPush', function (data) {
-      alert('Emergency content pushed');
-    });
+  function insertSlides () {
+    // Render images (slides) from cache.
+    var html = '';
+    var length = cache.slides.length;
+    for (var i = 0; i < length; i++) {
+      var output = Handlebars.templates.slide(cache.slides[i]);
+      html += output;
+    }
+
+    // Added render content to the page.
+    var el = document.getElementsByClassName('content');
+    el[0].innerHTML = html;
+
+    // Reset content update flag.
+    content_update = false
   }
 
   /**
@@ -243,12 +264,22 @@ var INFOS = (function() {
     var el = document.getElementsByClassName('content');
     el[0].addEventListener("animationend", function(event) {
       // Remove class.
-      event.target.className = event.target.className.replace('fade', '');
+      event.target.className = event.target.className.replace(' fade', '');
 
       // Update counter.
       current++;
       if (current === count) {
+        // Reset counter;
         current = 0;
+
+        // All slides have been displayed, check for new content.
+        if (content_update) {
+          insertSlides();
+
+          // Reload images array.
+          images = document.getElementsByClassName('image');
+          count = images.length;
+        }
       }
 
       // Add class to next image.
