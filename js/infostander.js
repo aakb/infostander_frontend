@@ -211,11 +211,6 @@ var INFOS = (function() {
       location.reload(true);
     });
 
-    // Request status.
-    socket.on('status', function (data) {
-      alert('Status requested');
-    });
-
     // Channel pushed content.
     socket.on('channelPush', function (data) {
       // Cache data.
