@@ -43,9 +43,10 @@ var INFOS = (function() {
       self.set = function set(value, expire) {
         var cookie = name + '=' + escape(value) + ';';
 
-        if (expire !== undefined) {
-          cookie += 'expires=' + expire + ';';
+        if (expire == undefined) {
+          expire = 'Thu, 01 Jan 2018 00:00:00 GMT';
         }
+        cookie += 'expires=' + expire + ';';
 
         cookie += 'path=/;';
         cookie += 'domain=' + document.domain + ';';
