@@ -73,6 +73,54 @@ var INFOS = (function() {
    *****************/
 
   /**
+   * Activate the screen and connect.
+   * @param activationCode
+   *   Activation code for the screen.
+   */
+  function activateScreenAndConnect(activationCode) {
+    console.log(activationCode);
+
+    // Build ajax post request.
+    var request = new XMLHttpRequest();
+    request.open('POST', config.resource.server + config.resource.uri + '/activate', true);
+    request.setRequestHeader('Content-Type', 'application/json');
+
+    request.onload = function(resp) {
+      if (request.readyState == 4 && request.status == 200) {
+        // Success.
+        resp = JSON.parse(request.responseText);
+
+        // Try to get connection to the proxy.
+        connect(resp.token);
+      }
+      else {
+        // We reached our target server, but it returned an error
+        alert('Activation could not be performed.');
+      }
+    }
+
+    request.onerror = function(exception) {
+      // There was a connection error of some sort
+      alert('Activation request failed.');
+    }
+
+    // Send the request.
+    request.send(JSON.stringify({ activationCode: activationCode }));
+  }
+
+  /**
+   * Get GET-paramter @name from the url
+   * @param name
+   * @returns {string}
+   */
+  function getParameterByName(name) {
+    name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+    var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+      results = regex.exec(location.search);
+    return results == null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+  }
+
+  /**
    * Check if a valied token exists.
    *
    * If a token is found and connection to the proxy is attampted. If token
@@ -84,6 +132,14 @@ var INFOS = (function() {
     var token = token_cookie.get('token');
 
     if (token === undefined) {
+      // If key in url do ajax and return;
+      var key = getParameterByName('key');
+      if (key !== "") {
+        activateScreenAndConnect(key);
+
+        return false;
+      }
+
       // Token not found, so display actiavte page.
       var template = Handlebars.templates.activation;
       var output = template({button: 'Activation'});
@@ -97,33 +153,9 @@ var INFOS = (function() {
       el[0].addEventListener('click', function(event) {
         event.preventDefault();
 
-        // Build ajax post request.
-        var request = new XMLHttpRequest();
-        request.open('POST', config.resource.server + config.resource.uri + '/activate', true);
-        request.setRequestHeader('Content-Type', 'application/json');
-
-        request.onload = function(resp) {
-          if (request.readyState == 4 && request.status == 200) {
-            // Success.
-            resp = JSON.parse(request.responseText);
-
-            // Try to get connection to the proxy.
-            connect(resp.token);
-          }
-          else {
-            // We reached our target server, but it returned an error
-            alert('Activation could not be performed.');
-          }
-        }
-
-        request.onerror = function(exception) {
-          // There was a connection error of some sort
-          alert('Activation request failed.');
-        }
-
         // Send the request.
         var form = document.getElementsByClassName('form-activation-code');
-        request.send(JSON.stringify({ activationCode: form[0].value }));
+        activateScreenAndConnect(form[0].value);
 
         return false;
       });
