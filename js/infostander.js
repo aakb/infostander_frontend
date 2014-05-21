@@ -78,8 +78,6 @@ var INFOS = (function() {
    *   Activation code for the screen.
    */
   function activateScreenAndConnect(activationCode) {
-    console.log(activationCode);
-
     // Build ajax post request.
     var request = new XMLHttpRequest();
     request.open('POST', config.resource.server + config.resource.uri + '/activate', true);
