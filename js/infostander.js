@@ -188,8 +188,10 @@ var INFOS = (function() {
     socket = io.connect(config.ws.server, { query: 'token=' + token });
 
     // Handle error events.
-    socket.socket.on('error', function (reason) {
-      alert(reason);
+    socket.on('error', function (reason) {
+      if (window.console) {
+        console.log(reason);
+      }
     });
 
     // Handle connected event.
@@ -197,8 +199,10 @@ var INFOS = (function() {
       // Connection accepted, so lets store the token.
       token_cookie.set(token);
 
-      // Set ready state at the server.
-      socket.emit('ready', { token: token });
+      // Set ready state at the server, if not reconnected.
+      if (content_init) {
+        socket.emit('ready', { token: token });
+      }
     });
 
     // Handle disconnect event (fires when disconnected or connection fails).
@@ -214,11 +218,13 @@ var INFOS = (function() {
 
     // Ready event - if the server accepted the ready command.
     socket.on('ready', function (data) {
+      console.log('ready: ' + data.statusCode);
       if (data.statusCode != 200) {
         // Screen not found will reload applicaton on dis-connection event.
         if (data.statusCode !== 404) {
-          // @todo: better error message.
-          alert('Code: ' + data.statusCode + ' - Connection error');
+          if (window.console) {
+            console.log('Code: ' + data.statusCode + ' - Connection error');
+          }
           return;
         }
       }
@@ -244,6 +250,7 @@ var INFOS = (function() {
 
     // Channel pushed content.
     socket.on('channelPush', function (data) {
+      console.log('channel');
       // Cache data.
       cache = data;
 
