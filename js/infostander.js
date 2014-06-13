@@ -218,7 +218,6 @@ var INFOS = (function() {
 
     // Ready event - if the server accepted the ready command.
     socket.on('ready', function (data) {
-      console.log('ready: ' + data.statusCode);
       if (data.statusCode != 200) {
         // Screen not found will reload applicaton on dis-connection event.
         if (data.statusCode !== 404) {
@@ -250,7 +249,6 @@ var INFOS = (function() {
 
     // Channel pushed content.
     socket.on('channelPush', function (data) {
-      console.log('channel');
       // Cache data.
       cache = data;
 
