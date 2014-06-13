@@ -188,7 +188,7 @@ var INFOS = (function() {
     socket = io.connect(config.ws.server, { query: 'token=' + token });
 
     // Handle error events.
-    socket.socket.on('error', function (reason) {
+    socket.on('error', function (reason) {
       alert(reason);
     });
 
