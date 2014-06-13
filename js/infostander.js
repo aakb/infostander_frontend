@@ -215,19 +215,7 @@ var INFOS = (function() {
       }
     });
 
-    // Handle disconnect event (fires when disconnected or connection fails).
-    socket.on('disconnect', function (reason) {
-      console.log(reason);
-      updateContent('Disconnected: ' + reason);
-      if (reason == 'booted') {
-        // Remove cookie with token.
-        token_cookie.remove();
-
-        // Reload application.
-        location.reload(true);
-      }
-    });
-
+    // Handled deletion of screen event.
     socket.on('booted', function (data) {
       // Remove cookie with token.
       token_cookie.remove();
