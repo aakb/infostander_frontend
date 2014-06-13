@@ -178,6 +178,14 @@ var INFOS = (function() {
   }
 
   /**
+   * Helper function to display error and system messages.
+   */
+  function updateContent(msg) {
+    var el = document.getElementsByClassName('content');
+    el[0].innerHTML = '<p>' + msg + '</p>';
+  }
+
+  /**
    * Connect to the web-socket.
    *
    * @param string token
@@ -192,6 +200,8 @@ var INFOS = (function() {
       if (window.console) {
         console.log(reason);
       }
+      // Display error.
+      updateContent(reason);
     });
 
     // Handle connected event.
@@ -207,6 +217,8 @@ var INFOS = (function() {
 
     // Handle disconnect event (fires when disconnected or connection fails).
     socket.on('disconnect', function (reason) {
+      console.log(reason);
+      updateContent('Disconnected: ' + reason);
       if (reason == 'booted') {
         // Remove cookie with token.
         token_cookie.remove();
@@ -214,6 +226,14 @@ var INFOS = (function() {
         // Reload application.
         location.reload(true);
       }
+    });
+
+    socket.on('booted', function (data) {
+      // Remove cookie with token.
+      token_cookie.remove();
+
+      // Reload application.
+      location.reload(true);
     });
 
     // Ready event - if the server accepted the ready command.
@@ -229,8 +249,7 @@ var INFOS = (function() {
       }
       else {
         // Remove the form.
-        var el = document.getElementsByClassName('content');
-        el[0].innerHTML = '<p>Awaiting content...</p>';
+        updateContent('Awaiting content...');
       }
     });
 
