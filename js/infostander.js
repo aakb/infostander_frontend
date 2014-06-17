@@ -200,8 +200,6 @@ var INFOS = (function() {
       if (window.console) {
         console.log(reason);
       }
-      // Display error.
-      updateContent(reason);
     });
 
     // Handle connected event.
