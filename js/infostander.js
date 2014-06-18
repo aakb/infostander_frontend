@@ -298,7 +298,8 @@ var INFOS = (function() {
     var count = images.length;
     var current = 0;
     var el = document.getElementsByClassName('content');
-    el[0].addEventListener("animationend", function(event) {
+
+    var changeClass = function(event) {
       // Remove class.
       event.target.className = event.target.className.replace(' fade', '');
 
@@ -320,7 +321,10 @@ var INFOS = (function() {
 
       // Add class to next image.
       images[current].className += ' fade';
-    }, false);
+    }
+
+    el[0].addEventListener("animationend", changeClass, false);
+    el[0].addEventListener("webkitAnimationEnd", changeClass, false);
 
     // Start the show.
     images[current].className += ' fade';
