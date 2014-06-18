@@ -20,6 +20,23 @@ body {
   opacity: 0;
 }
 
+@-webkit-keyframes fadeImage {
+  0% {
+    opacity: 0;
+    -webkit-animation-timeing-function: ease-in;
+  }
+  4.1% {
+    opacity: 1;
+  }
+  95.9% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    -webkit-animation-timeing-function: ease-out;
+  }
+}
+
 @keyframes fadeImage {
   0% {
     opacity: 0;
@@ -38,6 +55,11 @@ body {
 }
 
 .fade {
+  -webkit-animation-name: fadeImage;
+  -webkit-animation-duration: 60s;
+  -webkit-animation-iteration-count: 1;
+  -webkit-animation-fill-mode: both;
+
   animation-name: fadeImage;
   animation-duration: 60s;
   animation-iteration-count: 1;
