@@ -207,10 +207,8 @@ var INFOS = (function() {
       // Connection accepted, so lets store the token.
       token_cookie.set(token);
 
-      // Set ready state at the server, if not reconnected.
-      if (content_init) {
-        socket.emit('ready', { token: token });
-      }
+      // Set ready state at the server.
+      socket.emit('ready', { token: token });
     });
 
     // Handled deletion of screen event.
@@ -234,8 +232,11 @@ var INFOS = (function() {
         }
       }
       else {
-        // Remove the form.
-        updateContent('Awaiting content...');
+        // Only change screen state if, content have not been inited.
+        if (content_init) {
+          // Remove the form.
+          updateContent('Awaiting content...');
+        }
       }
     });
 
