@@ -25,7 +25,7 @@ var INFOS = (function() {
   /**
    * Cookie object.
    *
-   * Used to handle the cookie(s), mainly used to store the connetion JSON Web Token.
+   * Used to handle the cookie(s), mainly used to store the connection JSON Web Token.
    */
   var Cookie = (function() {
     var Cookie = function(name) {
@@ -107,7 +107,7 @@ var INFOS = (function() {
   }
 
   /**
-   * Get GET-paramter @name from the url
+   * Get GET-parameter @name from the url
    * @param name
    * @returns {string}
    */
@@ -121,10 +121,12 @@ var INFOS = (function() {
   }
 
   /**
-   * Check if a valied token exists.
+   * Check if a valid token exists.
    *
-   * If a token is found and connection to the proxy is attampted. If token
+   * If a token is found a connection to the proxy is attempted. If token
    * not found the activation form is displayed.
+   *
+   * If the key url-parameter is set, use that for activation.
    */
   function activation() {
     // Check if token exists.
@@ -168,6 +170,8 @@ var INFOS = (function() {
 
   /**
    * Load the socket.io script from the proxy server.
+   *
+   * Retry if  io  is not loaded after 30 seconds.
    */
   function loadSocket(callback) {
     var file = document.createElement('script');
@@ -281,6 +285,9 @@ var INFOS = (function() {
     });
   }
 
+  /**
+   * Insert the new slides into the DOM.
+   */
   function insertSlides () {
     // Render images (slides) from cache.
     var html = '';
@@ -299,7 +306,9 @@ var INFOS = (function() {
   }
 
   /**
-   * Start the slide aninmation (by moving the fade class between images).
+   * Start the slide animations (by moving the fade class between images).
+   *
+   * The
    */
   function startAnimation () {
     // Setup the animation.
@@ -329,11 +338,14 @@ var INFOS = (function() {
       }
 
       // Add class to next image.
+      // Timeout added to make sure the fade-class removal was completed,
+      //   before adding it again in 1-slide situations.
       window.setTimeout(function() {
         images[current].className += ' fade';
       }, 10);
     }
 
+    // Register event listener for animation end.
     el[0].addEventListener("animationend", changeClass, false);
     el[0].addEventListener("webkitAnimationEnd", changeClass, false);
 
@@ -345,6 +357,9 @@ var INFOS = (function() {
    * Exposed methods
    *****************/
 
+  /**
+   * This is used to start the application.
+   */
   function start() {
     // Load socket.io Javascript.
     loadSocket(function () {
@@ -354,7 +369,7 @@ var INFOS = (function() {
   }
 
   /**
-   * This should mainly be used to bebugging.
+   * This should mainly be used to debugging.
    */
   function stop() {
     socket.emit('pause', {});
