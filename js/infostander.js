@@ -320,7 +320,9 @@ var INFOS = (function() {
       }
 
       // Add class to next image.
-      images[current].className += ' fade';
+      window.setTimeout(function() {
+        images[current].className += ' fade';
+      }, 10);
     }
 
     el[0].addEventListener("animationend", changeClass, false);
