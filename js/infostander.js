@@ -113,8 +113,10 @@ var INFOS = (function() {
    */
   function getParameterByName(name) {
     name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
-    var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
-      results = regex.exec(location.search);
+
+    var regex = new RegExp("[\\?&]" + name + "=([^&#]*)");
+    var results = regex.exec(location.search);
+
     return results == null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
   }
 
@@ -175,6 +177,13 @@ var INFOS = (function() {
     file.onload = callback;
 
     document.getElementsByTagName("head")[0].appendChild(file);
+
+    window.setTimeout(function() {
+      if (typeof io === "undefined") {
+        document.getElementsByTagName("head")[0].removeChild(file);
+        window.setTimeout(start, 100);
+      }
+    }, 30000);
   }
 
   /**
