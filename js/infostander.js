@@ -182,6 +182,7 @@ var INFOS = (function() {
 
     document.getElementsByTagName("head")[0].appendChild(file);
 
+    // Make sure the script has been loaded, else restart application.
     window.setTimeout(function() {
       if (typeof io === "undefined") {
         document.getElementsByTagName("head")[0].removeChild(file);
