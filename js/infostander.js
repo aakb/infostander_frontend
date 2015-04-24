@@ -207,7 +207,16 @@ var INFOS = (function() {
    */
   function connect(token) {
     // Get connected to the server.
-    socket = io.connect(config.ws.server, { query: 'token=' + token });
+    socket = io.connect(config.ws.server, {
+        'query': 'token=' + token,
+        'force new connection': true,
+        'max reconnection attempts': Infinity,
+        'forceNew': true,
+        'reconnection': true,
+        'reconnectionDelay': 1000,
+        'reconnectionDelayMax' : 5000,
+        'reconnectionAttempts': Infinity
+     });
 
     // Handle error events.
     socket.on('error', function (reason) {
